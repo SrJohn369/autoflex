@@ -1,0 +1,268 @@
+/* Layout – responsive */
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background: #1e3a5f;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brand {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.nav {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.nav a {
+  color: #93c5fd;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+.nav a:hover {
+  background: rgba(255,255,255,0.1);
+  text-decoration: none;
+}
+
+.main {
+  flex: 1;
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Page */
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.page-header h2 {
+  margin: 0;
+}
+
+.page-header .muted,
+.muted {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin: 0.25rem 0 0 0;
+}
+
+.total-value {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  background: #e2e8f0;
+  color: #1e293b;
+}
+.btn:hover {
+  background: #cbd5e1;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.btn-secondary {
+  background: #64748b;
+  color: #fff;
+}
+.btn-secondary:hover {
+  background: #475569;
+}
+
+.btn-danger {
+  background: #dc2626;
+  color: #fff;
+}
+.btn-danger:hover {
+  background: #b91c1c;
+}
+
+.btn-sm {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.8rem;
+  margin-right: 0.5rem;
+}
+
+.actions {
+  white-space: nowrap;
+}
+
+/* Table – responsive */
+.table-wrap {
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 400px;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table th {
+  font-weight: 600;
+  background: #f8fafc;
+  color: #475569;
+}
+
+.table tbody tr:hover {
+  background: #f8fafc;
+}
+
+@media (max-width: 640px) {
+  .table th, .table td {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Form */
+.form {
+  max-width: 560px;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.35rem;
+  color: #374151;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+}
+
+.form-section {
+  margin: 1.5rem 0;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.form-section h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+}
+
+.form-row.inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.form-row.inline select {
+  flex: 1;
+  min-width: 140px;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+}
+
+.form-row.inline input {
+  width: 120px;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.loading, .error {
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.error {
+  background: #fef2f2;
+  color: #b91c1c;
+  margin-bottom: 1rem;
+}
+
+.loading {
+  color: #64748b;
+}
+
+@media (prefers-color-scheme: dark) {
+  .table-wrap,
+  .form {
+    background: #262626;
+  }
+  .table th {
+    background: #333;
+    color: #94a3b8;
+  }
+  .table td { border-color: #404040; }
+  .table tbody tr:hover { background: #333; }
+  .form-group input,
+  .form-group select,
+  .form-row.inline select,
+  .form-row.inline input {
+    background: #404040;
+    border-color: #525252;
+    color: #e5e5e5;
+  }
+  .form-group label { color: #d4d4d4; }
+  .error { background: #450a0a; color: #fca5a5; }
+}
