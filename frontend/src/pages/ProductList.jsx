@@ -1,20 +1,32 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { loadProducts, removeProduct } from '../store/slices/productSlice';
+import Modal from '../components/Modal';
 
 export default function ProductList() {
   const dispatch = useDispatch();
   const { list, loading, error } = useSelector((s) => s.products);
 
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: null, code: '', name: '' });
+
   useEffect(() => {
     dispatch(loadProducts());
   }, [dispatch]);
 
-  const handleDelete = (id, code) => {
-    if (window.confirm(`Excluir produto "${code}"?`)) {
-      dispatch(removeProduct(id)).then(() => dispatch(loadProducts()));
+  const requestDelete = (id, code, name) => {
+    setDeleteModal({ isOpen: true, id, code, name });
+  };
+
+  const confirmDelete = () => {
+    if (deleteModal.id) {
+      dispatch(removeProduct(deleteModal.id)).then(() => dispatch(loadProducts()));
     }
+    setDeleteModal({ isOpen: false, id: null, code: '', name: '' });
+  };
+
+  const cancelDelete = () => {
+    setDeleteModal({ isOpen: false, id: null, code: '', name: '' });
   };
 
   if (loading) return <p className="loading">Carregando produtos…</p>;
@@ -45,11 +57,11 @@ export default function ProductList() {
                 <tr key={p.id}>
                   <td>{p.code}</td>
                   <td>{p.name}</td>
-                  <td>{Number(p.value).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+                  <td>{Number(p.value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
                   <td>{p.materials?.length ?? 0} itens</td>
                   <td className="actions">
                     <Link to={`/products/${p.id}`} className="btn btn-sm">Editar</Link>
-                    <button type="button" className="btn btn-sm btn-danger" onClick={() => handleDelete(p.id, p.code)}>Excluir</button>
+                    <button type="button" className="btn btn-sm btn-danger" onClick={() => requestDelete(p.id, p.code, p.name)}>Excluir</button>
                   </td>
                 </tr>
               ))
@@ -57,6 +69,16 @@ export default function ProductList() {
           </tbody>
         </table>
       </div>
+
+      <Modal
+        isOpen={deleteModal.isOpen}
+        title="Confirmar Exclusão"
+        message={`Deseja realmente excluir o produto "${deleteModal.code} - ${deleteModal.name}"?`}
+        type="danger"
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
+        confirmText="Excluir"
+      />
     </div>
   );
 }

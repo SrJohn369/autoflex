@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { loadRawMaterialById, saveRawMaterial, clearCurrent } from '../store/slices/rawMaterialSlice';
+import Modal from '../components/Modal';
 
 export default function RawMaterialForm() {
   const { id } = useParams();
@@ -13,6 +14,10 @@ export default function RawMaterialForm() {
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
   const [quantityInStock, setQuantityInStock] = useState('');
+
+  // Modal states
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false });
+  const [feedbackModal, setFeedbackModal] = useState({ isOpen: false, type: 'success', title: '', message: '' });
 
   useEffect(() => {
     if (!isNew && id) {
@@ -33,17 +38,44 @@ export default function RawMaterialForm() {
     }
   }, [current]);
 
-  const handleSubmit = (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
+    setConfirmModal({ isOpen: true });
+  };
+
+  const executeSave = () => {
+    setConfirmModal({ isOpen: false });
     const payload = {
       code: code.trim(),
       name: name.trim(),
       quantityInStock: quantityInStock === '' ? 0 : Number(quantityInStock),
     };
+
     dispatch(saveRawMaterial({ id: isNew ? null : Number(id), rawMaterial: payload }))
       .then((result) => {
-        if (saveRawMaterial.fulfilled.match(result)) navigate('/raw-materials');
+        if (saveRawMaterial.fulfilled.match(result)) {
+          setFeedbackModal({
+            isOpen: true,
+            type: 'success',
+            title: 'Sucesso',
+            message: isNew ? 'Matéria-prima salva com sucesso!' : 'Matéria-prima editada com sucesso!',
+          });
+        } else {
+          setFeedbackModal({
+            isOpen: true,
+            type: 'error',
+            title: 'Erro ao salvar',
+            message: result.error?.message || 'Ocorreu um erro inesperado.',
+          });
+        }
       });
+  };
+
+  const closeFeedback = () => {
+    if (feedbackModal.type === 'success') {
+      navigate('/raw-materials');
+    }
+    setFeedbackModal({ isOpen: false, type: 'success', title: '', message: '' });
   };
 
   return (
@@ -53,7 +85,7 @@ export default function RawMaterialForm() {
         <button type="button" className="btn btn-secondary" onClick={() => navigate('/raw-materials')}>Voltar</button>
       </div>
       {error && <p className="error">{error}</p>}
-      <form onSubmit={handleSubmit} className="form">
+      <form onSubmit={handleFormSubmit} className="form">
         <div className="form-group">
           <label htmlFor="code">Código</label>
           <input id="code" value={code} onChange={(e) => setCode(e.target.value)} required />
@@ -71,6 +103,25 @@ export default function RawMaterialForm() {
           <button type="button" className="btn btn-secondary" onClick={() => navigate('/raw-materials')}>Cancelar</button>
         </div>
       </form>
+
+      <Modal
+        isOpen={confirmModal.isOpen}
+        title="Confirmar Salvamento"
+        message="Deseja realmente salvar essas alterações?"
+        type="info"
+        onConfirm={executeSave}
+        onCancel={() => setConfirmModal({ isOpen: false })}
+        confirmText="Salvar"
+      />
+
+      <Modal
+        isOpen={feedbackModal.isOpen}
+        title={feedbackModal.title}
+        message={feedbackModal.message}
+        type={feedbackModal.type}
+        onConfirm={closeFeedback}
+        confirmText="OK"
+      />
     </div>
   );
 }

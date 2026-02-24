@@ -28,14 +28,14 @@ public class RawMaterialService {
     @Transactional(readOnly = true)
     public RawMaterialDTO findById(Long id) {
         RawMaterial raw = rawMaterialRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Raw material not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Matéria-prima não encontrada"));
         return toDTO(raw);
     }
 
     @Transactional
     public RawMaterialDTO create(RawMaterialDTO dto) {
         if (rawMaterialRepository.existsByCode(dto.getCode())) {
-            throw new RuntimeException("Raw material already exists with code: " + dto.getCode());
+            throw new RuntimeException("Matéria-prima já cadastrada com o código: " + dto.getCode());
         }
         RawMaterial raw = toEntity(dto);
         raw = rawMaterialRepository.save(raw);
@@ -45,9 +45,9 @@ public class RawMaterialService {
     @Transactional
     public RawMaterialDTO update(Long id, RawMaterialDTO dto) {
         RawMaterial raw = rawMaterialRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Raw material not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Matéria-prima não encontrada"));
         if (rawMaterialRepository.existsByCodeAndIdNot(dto.getCode(), id)) {
-            throw new RuntimeException("Another raw material already exists with code: " + dto.getCode());
+            throw new RuntimeException("Matéria-prima já cadastrada com o código: " + dto.getCode());
         }
         raw.setCode(dto.getCode());
         raw.setName(dto.getName());
@@ -59,7 +59,7 @@ public class RawMaterialService {
     @Transactional
     public void deleteById(Long id) {
         if (!rawMaterialRepository.existsById(id)) {
-            throw new RuntimeException("Raw material not found with id: " + id);
+            throw new RuntimeException("Matéria-prima não encontrada");
         }
         rawMaterialRepository.deleteById(id);
     }

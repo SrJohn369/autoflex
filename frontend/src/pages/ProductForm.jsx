@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { loadProductById, saveProduct, clearCurrent } from '../store/slices/productSlice';
 import { loadRawMaterials as loadRawMaterialsList } from '../store/slices/rawMaterialSlice';
+import Modal from '../components/Modal';
 
 export default function ProductForm() {
   const { id } = useParams();
@@ -16,6 +17,9 @@ export default function ProductForm() {
   const [name, setName] = useState('');
   const [value, setValue] = useState('');
   const [materials, setMaterials] = useState([]);
+
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false });
+  const [feedbackModal, setFeedbackModal] = useState({ isOpen: false, type: 'success', title: '', message: '' });
 
   useEffect(() => {
     dispatch(loadRawMaterialsList());
@@ -73,8 +77,13 @@ export default function ProductForm() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
+    setConfirmModal({ isOpen: true });
+  };
+
+  const executeSave = () => {
+    setConfirmModal({ isOpen: false });
     const payload = {
       code: code.trim(),
       name: name.trim(),
@@ -86,10 +95,32 @@ export default function ProductForm() {
           quantityRequired: Number(m.quantityRequired),
         })),
     };
+
     dispatch(saveProduct({ id: isNew ? null : Number(id), product: payload }))
       .then((result) => {
-        if (saveProduct.fulfilled.match(result)) navigate('/');
+        if (saveProduct.fulfilled.match(result)) {
+          setFeedbackModal({
+            isOpen: true,
+            type: 'success',
+            title: 'Sucesso',
+            message: isNew ? 'Produto salvo com sucesso!' : 'Produto editado com sucesso!',
+          });
+        } else {
+          setFeedbackModal({
+            isOpen: true,
+            type: 'error',
+            title: 'Erro ao salvar',
+            message: result.error?.message || 'Ocorreu um erro inesperado.',
+          });
+        }
       });
+  };
+
+  const closeFeedback = () => {
+    if (feedbackModal.type === 'success') {
+      navigate('/');
+    }
+    setFeedbackModal({ isOpen: false, type: 'success', title: '', message: '' });
   };
 
   return (
@@ -99,7 +130,7 @@ export default function ProductForm() {
         <button type="button" className="btn btn-secondary" onClick={() => navigate('/')}>Voltar</button>
       </div>
       {error && <p className="error">{error}</p>}
-      <form onSubmit={handleSubmit} className="form">
+      <form onSubmit={handleFormSubmit} className="form">
         <div className="form-group">
           <label htmlFor="code">Código</label>
           <input id="code" value={code} onChange={(e) => setCode(e.target.value)} required />
@@ -146,6 +177,25 @@ export default function ProductForm() {
           <button type="button" className="btn btn-secondary" onClick={() => navigate('/')}>Cancelar</button>
         </div>
       </form>
+
+      <Modal
+        isOpen={confirmModal.isOpen}
+        title="Confirmar Salvamento"
+        message="Deseja realmente salvar essas alterações?"
+        type="info"
+        onConfirm={executeSave}
+        onCancel={() => setConfirmModal({ isOpen: false })}
+        confirmText="Salvar"
+      />
+
+      <Modal
+        isOpen={feedbackModal.isOpen}
+        title={feedbackModal.title}
+        message={feedbackModal.message}
+        type={feedbackModal.type}
+        onConfirm={closeFeedback}
+        confirmText="OK"
+      />
     </div>
   );
 }

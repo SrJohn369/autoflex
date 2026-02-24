@@ -35,14 +35,14 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
         return toDTO(product);
     }
 
     @Transactional
     public ProductDTO create(ProductDTO dto) {
         if (productRepository.existsByCode(dto.getCode())) {
-            throw new RuntimeException("Product already exists with code: " + dto.getCode());
+            throw new RuntimeException("Produto já cadastrado com o código: " + dto.getCode());
         }
         Product product = toEntity(dto);
         product = productRepository.save(product);
@@ -54,9 +54,9 @@ public class ProductService {
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
         if (productRepository.existsByCodeAndIdNot(dto.getCode(), id)) {
-            throw new RuntimeException("Another product already exists with code: " + dto.getCode());
+            throw new RuntimeException("Produto já cadastrado com o código: " + dto.getCode());
         }
         product.setCode(dto.getCode());
         product.setName(dto.getName());
@@ -71,7 +71,7 @@ public class ProductService {
     @Transactional
     public void deleteById(Long id) {
         if (!productRepository.existsById(id)) {
-            throw new RuntimeException("Product not found with id: " + id);
+            throw new RuntimeException("Produto não encontrado");
         }
         productRepository.deleteById(id);
     }
@@ -81,7 +81,7 @@ public class ProductService {
         for (ProductMaterialDTO mdto : materialDTOs) {
             if (mdto.getRawMaterialId() == null || mdto.getQuantityRequired() == null) continue;
             RawMaterial raw = rawMaterialRepository.findById(mdto.getRawMaterialId())
-                    .orElseThrow(() -> new RuntimeException("Raw material not found: " + mdto.getRawMaterialId()));
+                    .orElseThrow(() -> new RuntimeException("Matéria-prima não encontrada"));
             ProductMaterial pm = new ProductMaterial();
             pm.setProduct(product);
             pm.setRawMaterial(raw);
