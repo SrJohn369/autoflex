@@ -42,10 +42,10 @@ export default function RawMaterialList() {
         <table className="table">
           <thead>
             <tr>
+              <th className="actions">Ações</th>
               <th>Código</th>
               <th>Nome</th>
               <th>Quantidade em estoque</th>
-              <th className="actions">Ações</th>
             </tr>
           </thead>
           <tbody>
