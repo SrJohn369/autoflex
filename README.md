@@ -21,18 +21,18 @@ Aqui documentamos a navegação central da ferramenta:
 
 ### 1. Gestão de Matérias-Primas
 Cadastro e controle de insumos e do seu quantitativo de estoque disponível de forma limpa.
-> *(Insira aqui a pasta ou link para a imagem da listagem de matérias)*
-> ![Listagem de Matérias Primas](./img/materias-primas.jpg)
+> <img width="1894" height="910" alt="image" src="https://github.com/user-attachments/assets/7cfc9826-edd8-4bd9-8eff-0b0f320404a8" />
+> <img width="1907" height="908" alt="image" src="https://github.com/user-attachments/assets/7d2a3609-9360-4984-ae8d-9fe898d52c93" />
 
 ### 2. Gestão de Produtos e Associação
 Cadastro de produtos finalizados informando **Nome, Código e o seu respectivo Valor ($)**, além do formulário acoplado e responsivo para associar os insumos necessários.
-> *(Insira aqui a pasta ou link para a imagem da tela de edição de Produto e as matérias associadas)*
-> ![Associação de Produtos](./img/produtos.jpg)
+> <img width="1905" height="909" alt="image" src="https://github.com/user-attachments/assets/cad10732-33b2-4551-b920-159c5a4a38b5" />
+> <img width="1904" height="914" alt="image" src="https://github.com/user-attachments/assets/a60607d5-d9ff-4dd7-b0d6-a684979beb79" />
 
 ### 3. Simulador de Produção Baseado em Estoque (O Diferencial)
 O painel de processamento lógico da ferramenta. Ele esgota o estoque virtualmente e calcula a quantia a produzir dando a prioridade para o item cujo **Valor de venda ($)** é mais alto (evitando que produtos baratos consumam todo o estoque de um componente raro que geraria mais faturamento num produto Premium).
-> *(Insira aqui a pasta ou link para a tela listando a sugestão de produção cruzada com o valor final)*
-> ![Sugestão de Produção](./img/sugestao-producao.jpg)
+> <img width="1906" height="911" alt="image" src="https://github.com/user-attachments/assets/01a30238-996b-4d06-a5fe-bc35539baa71" />
+
 
 ---
 
