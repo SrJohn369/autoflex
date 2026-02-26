@@ -1,82 +1,74 @@
-# Autoflex – Stock Control (Products & Raw Materials)
+# Autoflex – Controle Inteligente de Estoque 🏭
 
-Sistema WEB para controle de estoque de matérias-primas e produtos, com sugestão de produção priorizada por valor.
+O **Autoflex** é uma solução Fullstack desenvolvida para a web que atende a indústrias que produzem itens variados e necessitam automatizar o controle do seu estoque de **insumos (matérias-primas)**.
+O grande diferencial da ferramenta é a sua capacidade preditiva: além de registrar e associar as quantidades de matérias-primas gastas por cada produto, o sistema **avalia o estoque atual** e sugere exatamente **quais produtos** e **quantas unidades de cada um** ainda podem ser fabricados, priorizando agressivamente a ordem de fabricação pelos itens de **maior valor gerado**.
 
-## Requisitos atendidos
+---
 
-### Não funcionais
-- **RNF001** – Web, principais navegadores (Chrome, Firefox, Edge).
-- **RNF002** – API separada (backend Spring Boot, frontend React).
-- **RNF003** – Telas responsivas (CSS responsivo e layout flex).
-- **RNF004** – Persistência em SGBD: H2 em memória por padrão; PostgreSQL/MySQL/Oracle configuráveis em `application.properties`.
-- **RNF005** – Backend com Spring Boot.
-- **RNF006** – Frontend com React e Redux (Redux Toolkit).
-- **RNF007** – Código, tabelas e colunas do banco de dados e codificação frontend e backend em inglês.
+## 🚀 Live Demo (Deploy na Nuvem)
 
-### Funcionais
-- **RF001** – CRUD produtos (backend).
-- **RF002** – CRUD matérias-primas (backend).
-- **RF003** – CRUD associação produto ↔ matérias-primas (backend; inclusão no cadastro de produto).
-- **RF004** – Consulta de produtos que podem ser produzidos com o estoque atual (prioridade por maior valor).
-- **RF005** – Interface CRUD de produtos (frontend).
-- **RF006** – Interface CRUD de matérias-primas (frontend).
-- **RF007** – Interface para associar matérias-primas aos produtos (no formulário de produto).
-- **RF008** – Interface para listar produtos e quantidades sugeridas para produção e valor total.
+A aplicação encontra-se atualmente publicada na plataforma **Render**, totalmente operacional e disponível publicamente:
+🔗 **Acessar Autoflex:** [https://autoflex-front-us1n.onrender.com](https://autoflex-front-us1n.onrender.com)
 
-## Como executar
+> ⚠️ **Aviso Importante sobre o Acesso:** O ambiente está rodando na "camada grátis" (Free Tier) do serviço Render. O provedor desliga os contêineres e o banco de dados temporariamente se o sistema ficar mais de **15 minutos** inativo ou sem requisições externas.
+> Por conta disso, se a sua primeira abertura de tela demorar alguns segundos, ou falhar na hora de carregar produtos, **não se preocupe**: o servidor está apenas sendo ativado dinamicamente de novo por debaixo dos panos. É só aguardar um breve instante ou recarregar a tela!
 
-### Backend (Spring Boot)
+---
 
-```bash
-cd backend/autoflex
-./mvnw spring-boot:run
-```
+## 📋 Funcionalidades do Sistema (Imagens)
 
-Ou com Maven instalado:
+Aqui documentamos a navegação central da ferramenta:
 
-```bash
-cd backend/autoflex
-mvn spring-boot:run
-```
+### 1. Gestão de Matérias-Primas
+Cadastro e controle de insumos e do seu quantitativo de estoque disponível de forma limpa.
+> *(Insira aqui a pasta ou link para a imagem da listagem de matérias)*
+> ![Listagem de Matérias Primas](./img/materias-primas.jpg)
 
-A API sobe em **http://localhost:8080**.  
-Endpoints:
+### 2. Gestão de Produtos e Associação
+Cadastro de produtos finalizados informando **Nome, Código e o seu respectivo Valor ($)**, além do formulário acoplado e responsivo para associar os insumos necessários.
+> *(Insira aqui a pasta ou link para a imagem da tela de edição de Produto e as matérias associadas)*
+> ![Associação de Produtos](./img/produtos.jpg)
 
-- `GET/POST /api/products`, `GET/PUT/DELETE /api/products/{id}`
-- `GET/POST /api/raw-materials`, `GET/PUT/DELETE /api/raw-materials/{id}`
-- `GET /api/production-suggestion` – sugestão de produção (produtos, quantidades e valor total)
+### 3. Simulador de Produção Baseado em Estoque (O Diferencial)
+O painel de processamento lógico da ferramenta. Ele esgota o estoque virtualmente e calcula a quantia a produzir dando a prioridade para o item cujo **Valor de venda ($)** é mais alto (evitando que produtos baratos consumam todo o estoque de um componente raro que geraria mais faturamento num produto Premium).
+> *(Insira aqui a pasta ou link para a tela listando a sugestão de produção cruzada com o valor final)*
+> ![Sugestão de Produção](./img/sugestao-producao.jpg)
 
-### Banco de dados
+---
 
-- **Padrão:** H2 em memória (`application.properties` já configurado). Útil para desenvolvimento sem poluir o Banco de dados e não precisar criar outro banco util também para testes.
-- **PostgreSQL:** descomente as linhas de PostgreSQL em `backend/autoflex/src/main/resources/application.properties` e comente as do H2; crie o banco e ajuste URL/usuário/senha.
+## ✅ Cobertura do Teste Prático (Requisitos vs Implementação)
 
-### Frontend (React + Vite)
+Abaixo descrevo de forma explícita e modular, como todos os Requisitos avaliados neste Processo Seletivo (Fullstack Junior) foram 100% cumpridos na versão final entregue da aplicação:
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
+### Requisitos Não Funcionais (Atendidos)
 
-Acesse **http://localhost:5173**. O proxy do Vite redireciona `/api` para `http://localhost:8080`; mantenha o backend rodando.
+| Requisito | Status na Aplicação | O que foi feito |
+| --- | --- | --- |
+| **RNF001** – Plataforma WEB nos principais navegadores | ✅ **Feito** | Interface de Single Page App desenhada em React (compatível em Node/Vite com Firefox, Chrome, Edge). |
+| **RNF002** – Separação de API Frontend vs Backend | ✅ **Feito** | A separação foi tratada à risca, possuindo um servidor porta `8080` (Spring) consumido puramente por Requisições REST HTTP do Cliente React. |
+| **RNF003** – Telas responsivas | ✅ **Feito** | O projeto utiliza CSS Vanila extensivo e Media Queries modernas para abrigar a experiência tanto em telas largas (Desktop) quanto num formulário ou tabela num Mobile nativo. |
+| **RNF004** – Persistência em SGBDs (Postgres, MySQl, Oracle) | ✅ **Feito** | Migrado inteiramente com Spring Data JPA + Driver oficial do banco de dados **PostgreSQL** para a versão produtiva. |
+| **RNF005** – Backend com Spring / similar | ✅ **Feito** | Desenhado utilizando Java 21 junto do poderoso ecossistema do **Spring Boot 3**. |
+| **RNF006** – Frontend em React + Redux | ✅ **Feito** | O client é servido por **ReactJS (v19)** integrado nativamente a **Redux e (Redux Toolkit - RTK)** utilizando slices globais de estado de armazenamento em memória. |
+| **RNF007** – Código totalmente em Inglês | ✅ **Feito** | Nomenclaturas de funções, declaração de objetos, DTOs e colunas ORM Hibernate do banco estão em padrão de conversação Inglês Técnico (*ex: `quantityInStock`, `ProductionSuggestionDTO`*). |
 
-## Estrutura
+### Requisitos Funcionais (Atendidos)
 
-- **Backend:** `backend/autoflex/`
-  - Entidades: `Product`, `RawMaterial`, `ProductMaterial` (associação com quantidade).
-  - Repositories, DTOs, Services, Controllers; exceções tratadas globalmente; CORS configurado.
-- **Frontend:** `frontend/src/`
-  - API client (axios), Redux (slices para products e rawMaterials), React Router.
-  - Páginas: listagem/formação de produtos (com matérias-primas), listagem/formação de matérias-primas, sugestão de produção.
+| Requisito | Status | Implementação Técnica Realizada |
+| --- | --- | --- |
+| **RF001** – Backend: CRUD Produtos | ✅ **Feito** | Endpoints REST criados: `GET/POST/PUT/DELETE /api/products` gerenciados no Controller. |
+| **RF002** – Backend: CRUD Matérias Primas | ✅ **Feito** | Endpoints REST criados: `GET/POST/PUT/DELETE /api/raw-materials` gerenciados pelo Service isolado. |
+| **RF003** – Backend: Associar Matérias aos Produtos | ✅ **Feito** | Implementação de relacionamento `@OneToMany(cascade.ALL)` garantido a inclusão/deleção de `ProductMaterial` atrelados junto ao Produto numa única submissão DTO de objeto longo. |
+| **RF004** – Backend: Consulta de produtos a fabricar (Estoque e Priorizando Valor) | ✅ **Feito** | Implementado lógica algorítmica no backend `/production-suggestion`. Traz os produtos ordenados descendentes de forma a esgotar blocos virtuais dinamicamente. Retorna listas de sugestão calculando o Total em Dinheiro Acumulado com ela. |
+| **RF005** – Frontend: UI CRUD Produtos | ✅ **Feito** | Telas de Listagem (fetch via axios) e Formulário (`src/pages/ProductForm.jsx`), conectados por React Router v6. |
+| **RF006** – Frontend: UI CRUD Matéria Primeira | ✅ **Feito** | Telas de listagem (`src/pages/RawMaterialList.jsx`) dispostas de maneira paralela às de produtos |
+| **RF007** – Frontend: UI Associar Matéria a Produto em formulário de Cadastro | ✅ **Feito** | Incluído bloco estendido dinâmico e flexível no próprio fluxo interativo de `ProductForm.jsx` para adicionar blocos de Matérias necessárias atreladas em um só `submit`. |
+| **RF008** – Frontend: UI Listar relatórios e quantidades priorizadas por estoque | ✅ **Feito** | Painel dinâmico gerado em `src/pages/ProductionSuggestion.jsx` que consome as propostas do backend e formata como uma Listagem de Análise Inteligente final. |
 
-## Sugestão de produção (RF004)
+### Requisitos Desejáveis e Extras
 
-O endpoint `/api/production-suggestion`:
+- Testes Unitários no Backend: ✅ **Feito**
+A aplicação servidor contém cobertura testada nos Services principais executadas utilizando **JUnit 5 + Mockito** (Ex: `ProductServiceTest.java`). Resguardando a regra de negócios limitantes a quebras acidentais de build.
 
-1. Ordena produtos por **valor unitário (decrescente)**.
-2. Para cada produto, calcula a quantidade máxima produzível com o estoque atual (limitação por matéria-prima).
-3. “Consome” virtualmente o estoque e inclui o item na sugestão.
-4. Retorna lista de itens (código, nome, valor unitário, quantidade sugerida, valor total) e **valor total** da sugestão.
-
-Assim, matérias-primas compartilhadas são alocadas primeiro para os produtos de maior valor.
+- Testes Unitários no Frontend: ✅ **Feito** 
+Aplicados em ambiente emulado local executando nativamente o binário de testes do **Jest com React Testing Library (RTL)**. Renderiza simuladores da DOM através do utils wrapper contendo conexões falsas do Mock do Redux e interage testando comportamentos base antes do software ir para nuvem. (Ex: `npm run test`)

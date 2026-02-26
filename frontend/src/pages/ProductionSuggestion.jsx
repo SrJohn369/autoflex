@@ -46,9 +46,9 @@ export default function ProductionSuggestion() {
                 <tr key={item.productId}>
                   <td>{item.productCode}</td>
                   <td>{item.productName}</td>
-                  <td>{Number(item.productValue).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+                  <td>{Number(item.productValue).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
                   <td>{Number(item.quantityProducible).toLocaleString()}</td>
-                  <td>{Number(item.totalValue).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+                  <td>{Number(item.totalValue).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
                 </tr>
               ))
             )}
@@ -58,7 +58,7 @@ export default function ProductionSuggestion() {
       {items.length > 0 && (
         <p className="total-value">
           <strong>Valor total da sugestão de produção:</strong>{' '}
-          {Number(totalValue).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+          {Number(totalValue).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
         </p>
       )}
     </div>

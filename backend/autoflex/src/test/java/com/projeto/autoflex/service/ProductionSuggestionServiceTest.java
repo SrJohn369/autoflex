@@ -106,10 +106,10 @@ class ProductionSuggestionServiceTest {
         
         ProductionSuggestionItemDTO tableItem = response.getItems().get(0);
         assertEquals("P01", tableItem.getProductCode());
-        assertEquals(new BigDecimal("10"), tableItem.getQuantityProducible());
-        assertEquals(new BigDecimal("2000.00"), tableItem.getTotalValue());
+        assertEquals(0, new BigDecimal("10").compareTo(tableItem.getQuantityProducible()));
+        assertEquals(0, new BigDecimal("2000.00").compareTo(tableItem.getTotalValue()));
 
-        assertEquals(new BigDecimal("2000.00"), response.getTotalValue());
+        assertEquals(0, new BigDecimal("2000.00").compareTo(response.getTotalValue()));
 
         verify(productRepository, times(1)).findAllWithMaterialsOrderByValueDesc();
         verify(rawMaterialRepository, times(1)).findAll();
@@ -117,9 +117,13 @@ class ProductionSuggestionServiceTest {
 
     @Test
     void getProductionSuggestion_ShouldLeaveRemaindersForLowerValueProducts() {
-        // Let's modify stock so we can build tables AND chairs
-        rawMaterial1.setQuantityInStock(new BigDecimal("108")); // 100 for tables + 8 for chairs
-        rawMaterial2.setQuantityInStock(new BigDecimal("54")); // 50 for tables + 4 for chairs
+        // We have 108 screws and 54 wood limit.
+        // Table needs 10 screws, 5 wood. Producible tables = 10. Leftovers = 8 screws,
+        // 4 wood.
+        // Chair needs 4 screws, 2 wood. Producible chairs with leftovers = min(8/4,
+        // 4/2) = 2.
+        rawMaterial1.setQuantityInStock(new BigDecimal("108"));
+        rawMaterial2.setQuantityInStock(new BigDecimal("54"));
 
         when(productRepository.findAllWithMaterialsOrderByValueDesc()).thenReturn(List.of(productA, productB));
         when(rawMaterialRepository.findAll()).thenReturn(List.of(rawMaterial1, rawMaterial2));
@@ -127,21 +131,19 @@ class ProductionSuggestionServiceTest {
         ProductionSuggestionResponseDTO response = productionSuggestionService.getProductionSuggestion();
 
         assertNotNull(response);
-        assertEquals(2, response.getItems().size()); // Both tables and chairs should be suggested
+        assertEquals(2, response.getItems().size()); // Suggests tables and then remainder on chairs
 
         ProductionSuggestionItemDTO tableItem = response.getItems().get(0);
         assertEquals("P01", tableItem.getProductCode());
-        assertEquals(new BigDecimal("10"), tableItem.getQuantityProducible());
-        assertEquals(new BigDecimal("2000.00"), tableItem.getTotalValue());
+        assertEquals(0, new BigDecimal("10").compareTo(tableItem.getQuantityProducible()));
+        assertEquals(0, new BigDecimal("2000.00").compareTo(tableItem.getTotalValue())); // 10 * 200 = 2000
 
         ProductionSuggestionItemDTO chairItem = response.getItems().get(1);
         assertEquals("P02", chairItem.getProductCode());
-        // Remaining: 8 screws, 4 woods. Chair needs 4 screws, 2 woods -> min(8/4, 4/2)
-        // = 2 chairs.
-        assertEquals(new BigDecimal("2"), chairItem.getQuantityProducible());
-        assertEquals(new BigDecimal("100.00"), chairItem.getTotalValue());
+        assertEquals(0, new BigDecimal("2").compareTo(chairItem.getQuantityProducible()));
+        assertEquals(0, new BigDecimal("100.00").compareTo(chairItem.getTotalValue())); // 2 * 50 = 100
 
-        assertEquals(new BigDecimal("2100.00"), response.getTotalValue());
+        assertEquals(0, new BigDecimal("2100.00").compareTo(response.getTotalValue()));
     }
 
     @Test

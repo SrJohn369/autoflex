@@ -8,7 +8,7 @@ export default function RawMaterialForm() {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isNew = id === 'new';
+  const isNew = !id || id === 'new';
   const { current, error } = useSelector((s) => s.rawMaterials);
 
   const [code, setCode] = useState('');
@@ -24,19 +24,19 @@ export default function RawMaterialForm() {
       dispatch(loadRawMaterialById(id));
     } else {
       dispatch(clearCurrent());
-      setCode('');
+      setCode(localStorage.getItem('lastRawMaterialCode') || '');
       setName('');
       setQuantityInStock('');
     }
   }, [id, isNew, dispatch]);
 
   useEffect(() => {
-    if (current) {
+    if (current && !isNew) {
       setCode(current.code ?? '');
       setName(current.name ?? '');
       setQuantityInStock(current.quantityInStock ?? '');
     }
-  }, [current]);
+  }, [current, isNew]);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -54,11 +54,14 @@ export default function RawMaterialForm() {
     dispatch(saveRawMaterial({ id: isNew ? null : Number(id), rawMaterial: payload }))
       .then((result) => {
         if (saveRawMaterial.fulfilled.match(result)) {
+          if (isNew) {
+            localStorage.setItem('lastRawMaterialCode', payload.code);
+          }
           setFeedbackModal({
             isOpen: true,
             type: 'success',
             title: 'Sucesso',
-            message: isNew ? 'Matéria-prima salva com sucesso!' : 'Matéria-prima editada com sucesso!',
+            message: isNew ? 'Adicionado com sucesso' : 'Editado com sucesso',
           });
         } else {
           setFeedbackModal({

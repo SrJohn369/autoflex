@@ -18,7 +18,8 @@ import java.util.Map;
 
 /**
  * Suggests which products (and quantities) can be produced with current stock.
- * Prioritizes products by value (highest first) since a raw material can be used in multiple products.
+ * Prioritizes products by value (highest first) since a raw material can be
+ * used in multiple products.
  */
 @Service
 public class ProductionSuggestionService {
@@ -27,7 +28,7 @@ public class ProductionSuggestionService {
     private final RawMaterialRepository rawMaterialRepository;
 
     public ProductionSuggestionService(ProductRepository productRepository,
-                                      RawMaterialRepository rawMaterialRepository) {
+            RawMaterialRepository rawMaterialRepository) {
         this.productRepository = productRepository;
         this.rawMaterialRepository = rawMaterialRepository;
     }
@@ -46,24 +47,28 @@ public class ProductionSuggestionService {
         BigDecimal totalValue = BigDecimal.ZERO;
 
         for (Product product : products) {
-            if (product.getMaterials() == null || product.getMaterials().isEmpty()) continue;
+            if (product.getMaterials() == null || product.getMaterials().isEmpty())
+                continue;
 
             BigDecimal maxQty = null;
             for (ProductMaterial pm : product.getMaterials()) {
                 Long rmId = pm.getRawMaterial().getId();
                 BigDecimal available = stock.getOrDefault(rmId, BigDecimal.ZERO);
                 BigDecimal required = pm.getQuantityRequired();
-                if (required == null || required.compareTo(BigDecimal.ZERO) <= 0) continue;
+                if (required == null || required.compareTo(BigDecimal.ZERO) <= 0)
+                    continue;
                 BigDecimal qty = available.divide(required, 10, RoundingMode.DOWN);
                 if (maxQty == null || qty.compareTo(maxQty) < 0) {
                     maxQty = qty;
                 }
             }
 
-            if (maxQty == null || maxQty.compareTo(BigDecimal.ZERO) <= 0) continue;
+            if (maxQty == null || maxQty.compareTo(BigDecimal.ZERO) <= 0)
+                continue;
 
             BigDecimal quantityProducible = maxQty.setScale(0, RoundingMode.DOWN);
-            if (quantityProducible.compareTo(BigDecimal.ZERO) <= 0) continue;
+            if (quantityProducible.compareTo(BigDecimal.ZERO) <= 0)
+                continue;
 
             for (ProductMaterial pm : product.getMaterials()) {
                 Long rmId = pm.getRawMaterial().getId();

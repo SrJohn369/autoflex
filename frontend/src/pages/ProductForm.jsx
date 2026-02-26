@@ -9,7 +9,7 @@ export default function ProductForm() {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isNew = id === 'new';
+  const isNew = !id || id === 'new';
   const { current, error } = useSelector((s) => s.products);
   const { list: rawMaterialsList } = useSelector((s) => s.rawMaterials);
 
@@ -30,7 +30,7 @@ export default function ProductForm() {
       dispatch(loadProductById(id));
     } else {
       dispatch(clearCurrent());
-      setCode('');
+      setCode(localStorage.getItem('lastProductCode') || '');
       setName('');
       setValue('');
       setMaterials([]);
@@ -38,7 +38,7 @@ export default function ProductForm() {
   }, [id, isNew, dispatch]);
 
   useEffect(() => {
-    if (current) {
+    if (current && !isNew) {
       setCode(current.code ?? '');
       setName(current.name ?? '');
       setValue(current.value ?? '');
@@ -49,7 +49,7 @@ export default function ProductForm() {
         quantityRequired: String(m.quantityRequired ?? ''),
       })) : []);
     }
-  }, [current]);
+  }, [current, isNew]);
 
   const addMaterial = () => {
     setMaterials((prev) => [...prev, { rawMaterialId: '', rawMaterialCode: '', rawMaterialName: '', quantityRequired: '' }]);
@@ -99,11 +99,14 @@ export default function ProductForm() {
     dispatch(saveProduct({ id: isNew ? null : Number(id), product: payload }))
       .then((result) => {
         if (saveProduct.fulfilled.match(result)) {
+          if (isNew) {
+            localStorage.setItem('lastProductCode', payload.code);
+          }
           setFeedbackModal({
             isOpen: true,
             type: 'success',
             title: 'Sucesso',
-            message: isNew ? 'Produto salvo com sucesso!' : 'Produto editado com sucesso!',
+            message: isNew ? 'Adicionado com sucesso' : 'Editado com sucesso',
           });
         } else {
           setFeedbackModal({
